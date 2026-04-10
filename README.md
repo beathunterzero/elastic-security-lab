@@ -52,13 +52,13 @@ Se pedirá una confirmación y el sistema te devolverá algo como:
 Password for the [kibana_system] user successfully reset.
 New value: XXXXXXXXXXXXXXXXXXXXXXXXX
 ```
-Ubica en el `docker-compose.yml` la siguiente linea que tendra una contraseña
+Ubica en el `docker-compose.yml` la siguiente linea
 
 ```yaml
 - ELASTICSEARCH_PASSWORD=dQ_WGNvbbT+agbHBXPbj
 ```
 
-Copia esa contraseña y colócala en tu `docker-compose.yml`:
+Remplaza esa contraseña y colócala en tu `docker-compose.yml`:
 
 ```yaml
  kibana:
