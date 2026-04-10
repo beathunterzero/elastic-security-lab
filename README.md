@@ -38,6 +38,48 @@ Antes de levantar Kibana por primera vez, debes cambiar la contraseña del usuar
 
 Esto es obligatorio para que Kibana pueda autenticarse contra Elasticsearch.
 
+### 🔐 Cambiar la contraseña del usuario kibana_system
+
+Ejecuta este comando dentro del contenedor de Elasticsearch:
+
+```bash
+docker exec -it elasticsearch bin/elasticsearch-reset-password -u kibana_system
+```
+
+Se pedirá una confirmación y el sistema te devolverá algo como:
+
+```code
+Password for the [kibana_system] user successfully reset.
+New value: XXXXXXXXXXXXXXXXXXXXXXXXX
+```
+Ubica en el `docker-compose.yml` la siguiente linea que tendra una contraseña
+
+```yaml
+- ELASTICSEARCH_PASSWORD=dQ_WGNvbbT+agbHBXPbj
+```
+
+Copia esa contraseña y colócala en tu `docker-compose.yml`:
+
+```yaml
+ kibana:
+    image: docker.elastic.co/kibana/kibana:8.17.10
+    container_name: kibana
+    restart: unless-stopped
+    depends_on:
+      es01:
+        condition: service_healthy
+    environment:
+      - ELASTICSEARCH_HOSTS=http://es01:9200
+      - ELASTICSEARCH_USERNAME=kibana_system
+      - ELASTICSEARCH_PASSWORD=PEGA_AQUÍ_LA_CONTRASEÑA_GENERADA_Y_REMPLAZA_LA_QUE_ESTA_POR_DEFECTO
+      - SERVER_PUBLICBASEURL=http://localhost:5601
+      - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=acadaab8c49b160a7f2fad480683a25b
+    ports:
+      - "5601:5601"
+    networks:
+      - soc-lab-net
+```
+
 ---
 
 ## 🏗️ Levantar el laboratorio
@@ -54,7 +96,12 @@ Accede a Kibana:
 http://localhost:5601
 ```
 
-Inicia sesión con tu usuario personal (creado previamente en Kibana).
+Inicia sesión con tu usuario personal (creado previamente en Kibana). Si es la primera vez que ingresas, puedes usar el usuario por defecto que es:
+
+```code
+username: elastic
+password: changeme
+```
 
 ---
 
