@@ -1,0 +1,84 @@
+filebeat.inputs:
+
+  - type: filestream
+    enabled: true
+    id: firewall-input
+    paths:
+      - /datasets/firewall/*.log
+    fields:
+      log_type: firewall
+    fields_under_root: true
+    ignore_older: 0s
+
+  - type: filestream
+    enabled: true
+    id: windows-input
+    paths:
+      - /datasets/windows/*.json
+    json.keys_under_root: true
+    json.add_error_key: true
+    json.overwrite_keys: true
+    fields:
+      log_type: windows
+    fields_under_root: true
+    ignore_older: 0s
+
+  - type: filestream
+    enabled: true
+    id: linux-input
+    paths:
+      - /datasets/linux/*.log
+    fields:
+      log_type: linux
+    fields_under_root: true
+    ignore_older: 0s
+
+  - type: filestream
+    enabled: true
+    id: azure-input
+    paths:
+      - /datasets/azure/activity/*.json
+      - /datasets/azure/signin/*.json
+      - /datasets/azure/audit/*.json
+      - /datasets/azure/firewall/*.json
+    fields:
+      log_type: azure
+    fields_under_root: true
+    ignore_older: 0s
+
+  - type: filestream
+    enabled: true
+    id: aws-input
+    paths:
+      - /datasets/aws/cloudtrail/*.json
+      - /datasets/aws/vpcflow/*.log
+      - /datasets/aws/guardduty/*.json
+      - /datasets/aws/s3access/*.log
+    fields:
+      log_type: aws
+    fields_under_root: true
+    ignore_older: 0s
+
+# ====================== Output ======================
+output.elasticsearch:
+  hosts: ["http://es01:9200"]
+  username: "elastic"
+  password: "changeme"
+
+# ====================== Kibana Setup ======================
+setup.kibana:
+  host: "http://kibana:5601"
+  username: "elastic"
+  password: "changeme"
+
+# ====================== Processors ======================
+processors:
+  - add_host_metadata: ~
+  - add_cloud_metadata: ~
+  - add_docker_metadata: ~
+  - add_kubernetes_metadata: ~
+
+# ====================== Logging ======================
+logging.level: info
+logging.to_files: false
+logging.to_stdout: true

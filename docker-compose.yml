@@ -1,0 +1,68 @@
+services:
+  es01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.10
+    container_name: es01
+    restart: unless-stopped
+    environment:
+      - node.name=es01
+      - discovery.type=single-node
+      - xpack.security.enabled=true
+      - ELASTIC_PASSWORD=changeme
+      - xpack.security.http.ssl.enabled=false
+      - xpack.security.transport.ssl.enabled=false
+      - ES_JAVA_OPTS=-Xms2g -Xmx2g
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    networks:
+      - soc-lab-net
+    # Healthcheck compatible con WSL2
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s -u elastic:changeme http://localhost:9200/_cluster/health | grep -E '\"status\":\"(yellow|green)\"'"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.17.10
+    container_name: kibana
+    restart: unless-stopped
+    depends_on:
+      es01:
+        condition: service_healthy
+    environment:
+      - ELASTICSEARCH_HOSTS=http://es01:9200
+      - ELASTICSEARCH_USERNAME=kibana_system
+      - ELASTICSEARCH_PASSWORD=dQ_WGNvbbT+agbHBXPbj
+      - SERVER_PUBLICBASEURL=http://localhost:5601
+      - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=acadaab8c49b160a7f2fad480683a25b
+    ports:
+      - "5601:5601"
+    networks:
+      - soc-lab-net
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:8.17.10
+    container_name: filebeat
+    user: root
+    restart: unless-stopped
+    depends_on:
+      - es01
+    command: ["-e", "--strict.perms=false"]
+    volumes:
+      - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - ./datasets:/datasets:ro
+    networks:
+      - soc-lab-net
+
+networks:
+  soc-lab-net:
+    driver: bridge
+
+volumes:
+  esdata:

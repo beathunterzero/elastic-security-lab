@@ -1,0 +1,14 @@
+# --- Filebeat internal data ---
+filebeat/data/
+filebeat/logs/
+
+# --- Docker junk ---
+*.pid
+*.tmp
+
+# --- VS Code ---
+.vscode/
+
+# --- System files ---
+.DS_Store
+Thumbs.db
