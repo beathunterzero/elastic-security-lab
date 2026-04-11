@@ -356,7 +356,4 @@ docker-compose up -d
 http://localhost:5601
 ```
 
-***********
-## También puedes ver
 
-[[Docker Compose]]
