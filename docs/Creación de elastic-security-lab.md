@@ -15,7 +15,8 @@ mkdir -p docs/architecture
 
 En este directorio se diseñó el diagrama de arquitectura (`elastic-security-lab.excalidraw`) y se exportó como imagen (`elastic-security-lab.png`).
 
-![[elastic-security-lab.png]]
+<img width="892" height="593" alt="image" src="https://github.com/user-attachments/assets/f93adac7-9e21-4dbf-bae4-16fa99be76e7" />
+
 
 # Creación del resto de directorios
 
