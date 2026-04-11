@@ -21,8 +21,9 @@ Inicia sesión con tu usuario (por ejemplo, `hunter`).
 En el menú lateral izquierdo:
 
 1. Entra a **Stack Management**
-2. Selecciona **Data Views**
-3. Haz clic en:
+2. Ve hasta **Kibana**
+3. Selecciona **Data Views**
+4. Haz clic en:
 
 ```code
 Create data view
@@ -62,6 +63,9 @@ En **Timestamp field**, selecciona:
 
 Este es el campo estándar que Filebeat usa para marcar la fecha y hora de cada evento.
 
+<img width="717" height="401" alt="image" src="https://github.com/user-attachments/assets/1c041f73-d207-4d77-8ef2-c1ebf63db0ed" />
+
+
 # Crear el Data View
 
 Haz clic en:
@@ -92,6 +96,8 @@ log_type : "windows"
 log_type : "firewall"
 log_type : "aws"
 ```
+<img width="1907" height="945" alt="image" src="https://github.com/user-attachments/assets/9583ade0-9dd8-4aeb-943d-1a6b68dd94f8" />
+
 
 # ¿Qué pasa si no aparece ningún dato?
 
