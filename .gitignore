@@ -1,14 +1,36 @@
-# --- Filebeat internal data ---
+# --- Elastic & Kibana Persistence ---
+# Si en algún momento se cambia el volumen nombrado 'esdata' por un bind mount
+elasticsearch/data/
+kibana/data/
+
+# --- Filebeat Internal State ---
+# Ignora el registro de lectura para que no haya conflictos de punteros de logs
 filebeat/data/
 filebeat/logs/
 
-# --- Docker junk ---
-*.pid
-*.tmp
+# --- Datasets (La carne del laboratorio) ---
+# Basado en los paths: /datasets/firewall, /datasets/windows, etc.
+# Ignoramos la carpeta completa para evitar fugas de información
+datasets/
+*.log
+*.json
+*.evtx
 
-# --- VS Code ---
+# --- Seguridad y Configuración Local (Protección contra el "yo del futuro") ---
+# Para cuando se decida  mover las passwords de es01 y kibana a un archivo externo
+.env
+*.env
+docker-compose.override.yml
+
+# --- Infraestructura de Nube (Metadata Caches) ---
+# Evita subir rastro de las credenciales de AWS/Azure que el procesador intenta leer
+.aws/
+.azure/
+
+# --- Basura de Sistema y IDE ---
 .vscode/
-
-# --- System files ---
+.idea/
 .DS_Store
 Thumbs.db
+*.tmp
+*.pid
