@@ -132,6 +132,17 @@ Aquí tienes los escenarios más comunes para trabajar con el laboratorio.
 
 ### 1. Ingestar logs automáticamente
 
+Por razones de seguridad y optimización de espacio, la estructura de directorios para los logs no está incluida en el repositorio. Debes crear las carpetas manualmente antes de levantar el stack para evitar que Docker las cree con permisos restringidos de root.
+
+Ejecuta el siguiente comando en la raíz del proyecto:
+
+```Bash
+mkdir -p datasets/windows datasets/linux datasets/aws datasets/azure datasets/firewall
+```
+
+Nota: Filebeat no podrá procesar datos si estas rutas no existen o si no tiene permisos de lectura sobre ellas.
+
+
 Coloca tus logs en la carpeta correspondiente:
 
 ```
