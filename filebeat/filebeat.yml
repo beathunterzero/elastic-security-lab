@@ -1,5 +1,8 @@
+# ====================== Inputs ======================
+
 filebeat.inputs:
 
+  # --- Firewalls (Text/Syslog) ---
   - type: filestream
     enabled: true
     id: firewall-input
@@ -8,21 +11,26 @@ filebeat.inputs:
     fields:
       log_type: firewall
     fields_under_root: true
+    pipeline: "fortigate-kv"
     ignore_older: 0s
 
+  # --- Windows (JSON) ---
   - type: filestream
     enabled: true
     id: windows-input
     paths:
       - /datasets/windows/*.json
-    json.keys_under_root: true
-    json.add_error_key: true
-    json.overwrite_keys: true
+    parsers:
+      - ndjson:
+          target: ""
+          add_error_key: true
+          overwrite_keys: true
     fields:
       log_type: windows
     fields_under_root: true
     ignore_older: 0s
 
+  # --- Linux (Text/Syslog) ---
   - type: filestream
     enabled: true
     id: linux-input
@@ -33,6 +41,7 @@ filebeat.inputs:
     fields_under_root: true
     ignore_older: 0s
 
+  # --- Azure (JSON) ---
   - type: filestream
     enabled: true
     id: azure-input
@@ -41,18 +50,39 @@ filebeat.inputs:
       - /datasets/azure/signin/*.json
       - /datasets/azure/audit/*.json
       - /datasets/azure/firewall/*.json
+    parsers:
+      - ndjson:
+          target: ""
+          add_error_key: true
+          overwrite_keys: true
     fields:
       log_type: azure
     fields_under_root: true
     ignore_older: 0s
 
+  # --- AWS (JSON Data) ---
   - type: filestream
     enabled: true
-    id: aws-input
+    id: aws-json-input
     paths:
       - /datasets/aws/cloudtrail/*.json
-      - /datasets/aws/vpcflow/*.log
       - /datasets/aws/guardduty/*.json
+    parsers:
+      - ndjson:
+          target: ""
+          add_error_key: true
+          overwrite_keys: true
+    fields:
+      log_type: aws
+    fields_under_root: true
+    ignore_older: 0s
+
+  # --- AWS (Plain Text / CSV Data) ---
+  - type: filestream
+    enabled: true
+    id: aws-log-input
+    paths:
+      - /datasets/aws/vpcflow/*.log
       - /datasets/aws/s3access/*.log
     fields:
       log_type: aws
