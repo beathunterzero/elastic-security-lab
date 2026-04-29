@@ -135,7 +135,7 @@ elastic-security-lab/
 ├── datasets/
 │         
 ├── filebeat/
-├────── filebeat.yml
+│   └── filebeat.yml
 │   
 ├── docs/                  
 │   └── architecture/    
