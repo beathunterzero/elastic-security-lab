@@ -184,4 +184,5 @@ MIT
 
 ## Autor
 
-**beathunterzero**
+**beathunterzero**  
+Cyber Threat Hunting & Security
