@@ -1,149 +1,82 @@
-# 🎯 elastic-security-lab
+# elastic-security-lab
 
 ![Elasticsearch](https://img.shields.io/badge/Elasticsearch-8.17-blue)
 ![Kibana](https://img.shields.io/badge/Kibana-8.17-yellow)
 ![Filebeat](https://img.shields.io/badge/Filebeat-8.17-green)
 ![License](https://img.shields.io/badge/License-MIT-purple)
 
-Elastic Security Lab es un laboratorio profesional diseñado para practicar Threat Hunting, ingestión de logs, análisis de datos y visualización usando Elasticsearch + Kibana + Filebeat.
-Incluye arquitectura completa, datasets de entrenamiento y un pipeline de ingestión modular.
+Elastic Security Lab es un laboratorio orientado a analistas de seguridad (SOC / Threat Hunters) para practicar ingestión de logs, análisis y detección usando Elasticsearch, Kibana y Filebeat.
+
+Incluye una arquitectura funcional, datasets de entrenamiento y un pipeline de ingestión listo para uso local.
 
 ---
 
-## 🚀 Requisitos
+## Requisitos
 
-Antes de iniciar, asegúrate de tener instalado:
-
-* Docker
-* Docker Compose
-* WSL2 (si estás en Windows)
-* Git
+- Docker  
+- Docker Compose  
+- WSL2 (solo en Windows)  
+- Git  
 
 ---
 
-## 📦 Instalación
-
-Clona el repositorio:
+## Quick Start
 
 ```bash
 git clone https://github.com/beathunterzero/elastic-security-lab.git
 cd elastic-security-lab
-```
+````
 
----
+### 1. Configurar credenciales
 
-## ⚙️ Configuración Inicial (IMPORTANTE)
-
-Antes de levantar Kibana por primera vez, debes cambiar la contraseña del usuario `kibana_system` y colocarla en el `docker-compose.yml`.
-
-Esto es obligatorio para que Kibana pueda autenticarse contra Elasticsearch.
-
-### 🔐 Cambiar la contraseña del usuario kibana_system
-
-Ejecuta este comando dentro del contenedor de Elasticsearch:
+Antes de iniciar, genera una nueva contraseña para `kibana_system`:
 
 ```bash
 docker exec -it elasticsearch bin/elasticsearch-reset-password -u kibana_system
 ```
 
-Se pedirá una confirmación y el sistema te devolverá algo como:
+Luego actualiza la variable correspondiente en `docker-compose.yml`:
 
-```code
-Password for the [kibana_system] user successfully reset.
-New value: XXXXXXXXXXXXXXXXXXXXXXXXX
 ```
-Ubica en el `docker-compose.yml` la siguiente linea
-
-```yaml
-- ELASTICSEARCH_PASSWORD=dQ_WGNvbbT+agbHBXPbj
-```
-
-Remplaza esa contraseña y colócala en tu `docker-compose.yml`:
-
-```yaml
- kibana:
-    image: docker.elastic.co/kibana/kibana:8.17.10
-    container_name: kibana
-    restart: unless-stopped
-    depends_on:
-      es01:
-        condition: service_healthy
-    environment:
-      - ELASTICSEARCH_HOSTS=http://es01:9200
-      - ELASTICSEARCH_USERNAME=kibana_system
-      - ELASTICSEARCH_PASSWORD=PEGA_AQUÍ_LA_CONTRASEÑA_GENERADA_Y_REMPLAZA_LA_QUE_ESTA_POR_DEFECTO
-      - SERVER_PUBLICBASEURL=http://localhost:5601
-      - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=acadaab8c49b160a7f2fad480683a25b
-    ports:
-      - "5601:5601"
-    networks:
-      - soc-lab-net
+ELASTICSEARCH_PASSWORD=<password_generado>
 ```
 
 ---
 
-## 🏗️ Levantar el laboratorio
+### 2. Preparar estructura de datasets
 
-Una vez configurado:
+```bash
+mkdir -p datasets/windows datasets/linux datasets/aws datasets/azure datasets/firewall
+```
+
+---
+
+### 3. Levantar el laboratorio
 
 ```bash
 docker-compose up -d
 ```
 
-Accede a Kibana:
+Acceso por defecto:
 
 ```
 http://localhost:5601
 ```
 
-Inicia sesión con tu usuario personal (creado previamente en Kibana). Si es la primera vez que ingresas, puedes usar el usuario por defecto que es:
+Credenciales iniciales:
 
-```code
+```
 username: elastic
 password: changeme
 ```
 
 ---
 
-## 📂 Estructura del Proyecto
+## Uso del laboratorio
 
-```
-elastic-security-lab/
-│
-├── datasets/              # Logs de entrenamiento (AWS, Azure, Windows, Linux)
-│
-├── filebeat/
-│   ├── filebeat.yml       # Configuración de ingestión
-│   └── docker-compose.yml # Stack completo
-│
-├── docs/
-│   └── architecture/      # Diagramas y documentación
-│
-├── .gitignore
-├── docker-compose.yml
-└── README.md
-```
+### Ingesta de logs
 
----
-
-## 🛠️ Guía de Uso Rápido
-
-Aquí tienes los escenarios más comunes para trabajar con el laboratorio.
-
-### 1. Ingestar logs automáticamente
-
-Por razones de seguridad y optimización de espacio, la estructura de directorios para los logs no está incluida en el repositorio. Debes crear las carpetas manualmente antes de levantar el stack para evitar que Docker las cree con permisos restringidos de root.
-
-Ejecuta el siguiente comando en la raíz del proyecto:
-
-```Bash
-mkdir -p datasets/windows datasets/linux datasets/aws datasets/azure datasets/firewall
-```
-
-Nota: Filebeat no podrá procesar datos si estas rutas no existen o si no tiene permisos de lectura sobre ellas.
-
-
-Coloca tus logs en la carpeta correspondiente:
+Coloca los archivos en las rutas correspondientes:
 
 ```
 datasets/windows/
@@ -152,96 +85,94 @@ datasets/aws/
 datasets/azure/
 ```
 
-Filebeat los detectará y enviará a Elasticsearch.
+Filebeat procesará automáticamente los logs y los enviará a Elasticsearch.
 
 ---
 
-### 2. Crear Data Views en Kibana
+### Data Views en Kibana
 
-Una vez que Filebeat haya enviado datos, crea un Data View:
-
-* Stack Management
-* Data Views
-* Crear nuevo
-
-Patrón sugerido:
+Crear un Data View con el patrón:
 
 ```
 filebeat-*
 ```
 
-Esto te permitirá usar Discover, Dashboards y Lens.
+Esto habilita el uso de:
 
-(La guía detallada irá en docs/ más adelante.)
+- Discover
+    
+- Dashboards
+    
+- Lens
+    
 
 ---
 
-### 3. Crear tu usuario personal
+### Gestión de usuarios
 
-Desde Kibana:
+Ruta en Kibana:
 
 ```
-Stack Management → Security → Users → Create User
+Stack Management → Security → Users
 ```
 
-Roles recomendados para Threat Hunting:
+Roles recomendados:
 
-* kibana_admin
-* monitoring_user
-* viewer
-
-(La guía completa también irá en docs/.)
+- kibana_admin
+    
+- monitoring_user
+    
+- viewer
+    
 
 ---
 
-### 4. Reiniciar el stack
+## Estructura del proyecto
 
-```bash
-docker-compose down
-docker-compose up -d
+```
+elastic-security-lab/
+│
+├── datasets/              
+├── filebeat/              
+├── docs/                  
+│   └── architecture/      
+│
+├── docker-compose.yml
+└── README.md
 ```
 
 ---
 
-## 📖 Explicación de Componentes
+## Datasets
 
-| Componente    | Función                             |
-| ------------- | ----------------------------------- |
-| Elasticsearch | Almacenamiento y búsqueda de logs   |
-| Kibana        | Visualización, dashboards, análisis |
-| Filebeat      | Ingestión de logs desde datasets    |
-| Datasets      | Logs públicos para entrenamiento    |
+El laboratorio utiliza datasets públicos para entrenamiento:
 
----
-
-## 🧪 Datasets de Entrenamiento
-
-Este laboratorio incluye datasets públicos para practicar:
-
-* Windows Event Logs
-* Linux auth logs
-* AWS CloudTrail / GuardDuty
-* Azure Activity / Sign-In
-* Firewall logs
-
-(No se incluyen logs privados ni sensibles.)
+- Windows Event Logs
+    
+- Linux auth logs
+    
+- AWS CloudTrail / GuardDuty
+    
+- Azure Activity / Sign-In
+    
+- Firewall logs
+    
 
 ---
 
-## 🛡️ Seguridad
+## Seguridad
 
-Este proyecto está diseñado para uso educativo y de entrenamiento.
-No contiene información privada ni datos reales de producción.
-
----
-
-## 📜 Licencia
-
-Este proyecto está bajo la licencia MIT.
-Puedes usarlo, modificarlo y compartirlo libremente.
+Proyecto orientado a entorno local y fines educativos.  
+No incluye datos sensibles ni configuraciones de producción.
 
 ---
 
-## 👤 Autor
+## Licencia
 
-Desarrollado por beathunterzero Entusiasta de la Caza de Amenazas
+MIT
+
+---
+
+## Autor
+
+**beathunterzero**
