@@ -5,18 +5,22 @@
 ![Filebeat](https://img.shields.io/badge/Filebeat-8.17-green)
 ![License](https://img.shields.io/badge/License-MIT-purple)
 
-Elastic Security Lab es un laboratorio orientado a analistas de seguridad (SOC / Threat Hunters) para practicar ingestión de logs, análisis y detección usando Elasticsearch, Kibana y Filebeat.
+Elastic Security Lab is a laboratory environment designed for security analysts (SOC / Threat Hunters) to practice log ingestion, analysis, and detection using Elasticsearch, Kibana, and Filebeat.
 
-Incluye una arquitectura funcional, datasets de entrenamiento y un pipeline de ingestión listo para uso local.
+It includes a functional architecture, training datasets, and a ready-to-use ingestion pipeline for local environments.
 
 ---
 
-## Requisitos
+## Requirements
 
-- Docker  
-- Docker Compose  
-- WSL2 (solo en Windows)  
-- Git  
+- Docker
+    
+- Docker Compose
+    
+- WSL2 (Windows only)
+    
+- Git
+    
 
 ---
 
@@ -25,25 +29,25 @@ Incluye una arquitectura funcional, datasets de entrenamiento y un pipeline de i
 ```bash
 git clone https://github.com/beathunterzero/elastic-security-lab.git
 cd elastic-security-lab
-````
+```
 
-### 1. Configurar credenciales
+### 1. Configure credentials
 
-Antes de iniciar, genera una nueva contraseña para `kibana_system`:
+Before starting, generate a new password for `kibana_system`:
 
 ```bash
 docker exec -it elasticsearch bin/elasticsearch-reset-password -u kibana_system
 ```
 
-Luego actualiza la variable correspondiente en `docker-compose.yml`:
+Then update the corresponding variable in `docker-compose.yml`:
 
 ```
-ELASTICSEARCH_PASSWORD=<password_generado>
+ELASTICSEARCH_PASSWORD=<generated_password>
 ```
 
 ---
 
-### 2. Preparar estructura de datasets
+### 2. Prepare dataset structure
 
 ```bash
 mkdir -p datasets/windows datasets/linux datasets/aws datasets/azure datasets/firewall
@@ -51,19 +55,19 @@ mkdir -p datasets/windows datasets/linux datasets/aws datasets/azure datasets/fi
 
 ---
 
-### 3. Levantar el laboratorio
+### 3. Start the lab
 
 ```bash
 docker-compose up -d
 ```
 
-Acceso por defecto:
+Default access:
 
 ```
 http://localhost:5601
 ```
 
-Credenciales iniciales:
+Initial credentials:
 
 ```
 username: elastic
@@ -72,11 +76,11 @@ password: changeme
 
 ---
 
-## Uso del laboratorio
+## Lab Usage
 
-### Ingesta de logs
+### Log ingestion
 
-Coloca los archivos en las rutas correspondientes:
+Place files in the corresponding paths:
 
 ```
 datasets/windows/
@@ -85,19 +89,19 @@ datasets/aws/
 datasets/azure/
 ```
 
-Filebeat procesará automáticamente los logs y los enviará a Elasticsearch.
+Filebeat will automatically process the logs and send them to Elasticsearch.
 
 ---
 
-### Data Views en Kibana
+### Data Views in Kibana
 
-Crear un Data View con el patrón:
+Create a Data View with the pattern:
 
 ```
 filebeat-*
 ```
 
-Esto habilita el uso de:
+This enables:
 
 - Discover
     
@@ -108,15 +112,15 @@ Esto habilita el uso de:
 
 ---
 
-### Gestión de usuarios
+### User management
 
-Ruta en Kibana:
+Path in Kibana:
 
 ```
 Stack Management → Security → Users
 ```
 
-Roles recomendados:
+Recommended roles:
 
 - kibana_admin
     
@@ -127,7 +131,7 @@ Roles recomendados:
 
 ---
 
-## Estructura del proyecto
+## Project Structure
 
 ```
 elastic-security-lab/
@@ -138,7 +142,7 @@ elastic-security-lab/
 │   └── filebeat.yml
 │   
 ├── docs/                  
-│   └── architecture/    
+│   ├── architecture/    
 │   └── procesos/
 │
 ├── docker-compose.yml
@@ -149,7 +153,7 @@ elastic-security-lab/
 
 ## Datasets
 
-El laboratorio utiliza datasets públicos para entrenamiento:
+The lab uses public datasets for training:
 
 - Windows Event Logs
     
@@ -164,16 +168,17 @@ El laboratorio utiliza datasets públicos para entrenamiento:
 
 ---
 
-## Seguridad
+## Security
 
-Proyecto orientado a entorno local y fines educativos.  
-No incluye datos sensibles ni configuraciones de producción.
+This project is intended for local environments and educational purposes.  
+It does not include sensitive data or production configurations.
 
 ---
 
-## Licencia
+## License
 
 MIT
+
 
 ---
 
