@@ -131,12 +131,16 @@ Roles recomendados:
 
 ```
 elastic-security-lab/
-├── datasets/              
+│
+├── datasets/
+│         
 ├── filebeat/
-├────── filebeat.yml        
+├────── filebeat.yml
+│   
 ├── docs/                  
 │   └── architecture/    
-│   └── procesos/   
+│   └── procesos/
+│
 ├── docker-compose.yml
 └── README.md
 ```
