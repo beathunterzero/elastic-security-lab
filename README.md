@@ -135,7 +135,8 @@ elastic-security-lab/
 ├── datasets/              
 ├── filebeat/              
 ├── docs/                  
-│   └── architecture/      
+│   └── architecture/    
+│   └── procesos/   
 │
 ├── docker-compose.yml
 └── README.md
